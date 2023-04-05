@@ -62,6 +62,7 @@ void resetTimer() {
 
 void stopTimer() {
 	stopped = 1;
+	resetTimer();
 }
 void startTimer() {
 	stopped = 0;
