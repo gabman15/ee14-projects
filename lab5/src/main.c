@@ -2,6 +2,13 @@
 #include "SysTick.h"
 #include "LED.h"
 #include "Draw.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+#define DINO_JUMP_TIME 60
+#define DINO_JUMP_LAG 25
+#define MAX_SPAWN_TIME 100
 
 void System_Clock_Init(void){
 	
@@ -46,31 +53,82 @@ int main(void){
 	//uint32_t timer;
 	LCD_Initialization();
 	Joystick_Init();
+	time_t t;
+	srand((unsigned) time(&t));
 	int prevButton = 0;
 	int currButton = 0;
-	int jumping = 1;
+	int jumping = 0;
 	int obstaclePos = -1;
-	while(1) {
-		delay(1000);
-		LCD_Clear();
+	int jumpTimer = 0;
+	int jumpLagTimer = 0;
+	uint64_t levelTimer = 1;
+	int dinoJumpTime = DINO_JUMP_TIME;
+	int dinoJumpLag = DINO_JUMP_LAG;
+	int obstacleSpeed = 25;
+	int obstacleTimer = obstacleSpeed;
+	int obstacleSpawnTimer = 0;
+	int level = 0;
 
-		drawDinosaur(jumping);
-		if(!jumping)
-			jumping = 1;
-		else
-			jumping = 0;
-		if (obstaclePos == -1)
-			obstaclePos = 5;
+	while(1) {
+		delay(10);
+		LCD_Clear();
+		if (levelTimer % 1000 == 0) {
+			obstacleSpeed-=5;
+			dinoJumpTime-=5;
+			dinoJumpLag-=5;
+			level++;
+		}
+		drawBar(level);
 		if (obstaclePos != -1) {
 			if (obstaclePos == 1) {
-				//if (!jumping)
-				//	break;
+				if (!jumping)
+					break;
 				drawObstacle((uint8_t)obstaclePos, 1);
-			} else
+			}
+			else
 				drawObstacle((uint8_t)obstaclePos, 0);
-			obstaclePos--;
+			if (obstacleTimer == 0) {
+				obstaclePos--;
+				obstacleTimer = obstacleSpeed;
+			}
 		}
+		if (obstacleSpawnTimer != 0) {
+			obstacleSpawnTimer--;
+			if(obstacleSpawnTimer == 0) {
+				obstaclePos = 5;
+				obstacleTimer = obstacleSpeed;
+			}
+		}
+		if (obstacleTimer != 0) {
+			obstacleTimer--;
+			if (obstaclePos == -1) {
+				obstacleSpawnTimer = rand() % (MAX_SPAWN_TIME+1);
+			}
+		}
+		
+		currButton = GPIOA->IDR & 1U;
+
+		if (currButton != prevButton) {
+			prevButton = currButton;
+			if(currButton == 1 && !jumping && jumpLagTimer == 0) {
+				jumping = 1;
+				jumpTimer = dinoJumpTime;
+			}
+		}
+		drawDinosaur(jumping);
+		if (jumpLagTimer != 0)
+			jumpLagTimer--;
+		if (jumpTimer != 0) {
+			jumpTimer--;
+			if (jumpTimer == 0) {
+				jumping = 0;
+				jumpLagTimer = dinoJumpLag;
+			}
+		}
+		
+		levelTimer++;
 	}
-	
+	char *str = "Lose  ";
+	LCD_DisplayString(str);
 	while(1) {};
 }

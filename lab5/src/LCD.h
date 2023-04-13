@@ -21,5 +21,6 @@ void LCD_WriteChar(uint8_t* ch, bool point, bool colon, uint8_t position);
 static void LCD_Conv_Char_Seg(uint8_t* c,bool point,bool colon, uint8_t* digit);
 void LCD_DisplayTime(uint32_t millis);
 void LCD_WriteObject(uint8_t position, uint8_t object);
+void LCD_Display_Bar(int bar0, int bar1, int bar2, int bar3);
 
 #endif /* __STM32L476G_DISCOVERY_LCD_H */

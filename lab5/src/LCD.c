@@ -454,6 +454,26 @@ static void LCD_Conv_Char_Seg(uint8_t* c, bool point, bool colon, uint8_t* digit
 	
 }
 
+void LCD_Display_Bar(int bar0, int bar1, int bar2, int bar3) {
+  if(bar0)
+    BAR0_ON;
+  if(!bar0)
+    BAR0_OFF;
+  if(bar1)
+    BAR1_ON;
+  if(!bar1)
+    BAR1_OFF;
+  if(bar2)
+    BAR2_ON;
+  if(!bar2)
+    BAR2_OFF;
+  if(bar3)
+    BAR3_ON;
+  if(!bar3)
+    BAR3_OFF;
+  LCD_bar();
+}
+
 static void LCD_Object(uint8_t *digit, uint8_t object) {
   uint16_t ch;
   if(object == DINOJUMP)
