@@ -253,6 +253,22 @@ void LCD_DisplayTime(uint32_t millis) {
   LCD_WriteChar(&temp, 0, 0, 5);
 }
 
+void LCD_DisplayScore(uint32_t num) {
+  char *str = "Lose  ";
+	LCD_WriteChar(str,0,0,0);
+  LCD_WriteChar(str+1,0,0,1);
+  LCD_WriteChar(str+2,0,0,2);
+  LCD_WriteChar(str+3,0,1,3);
+  
+  uint8_t temp = num % 100;
+  uint8_t tens = temp / 10;
+  uint8_t ones = temp % 10;
+  tens += 48;
+  ones += 48;
+  LCD_WriteChar(&tens, 0, 0, 4);
+  LCD_WriteChar(&ones, 0, 0, 5);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Do not change the code below
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

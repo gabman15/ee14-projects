@@ -68,11 +68,12 @@ int main(void){
 	int obstacleTimer = obstacleSpeed;
 	int obstacleSpawnTimer = 0;
 	int level = 0;
+	int points = 0;
 
 	while(1) {
 		delay(10);
 		LCD_Clear();
-		if (levelTimer % 1000 == 0) {
+		if (level != 5 && levelTimer != 0 && (levelTimer % 1000 == 0)) {
 			obstacleSpeed-=5;
 			dinoJumpTime-=5;
 			dinoJumpLag-=5;
@@ -88,6 +89,8 @@ int main(void){
 			else
 				drawObstacle((uint8_t)obstaclePos, 0);
 			if (obstacleTimer == 0) {
+				if(obstaclePos == 1)
+					points++;
 				obstaclePos--;
 				obstacleTimer = obstacleSpeed;
 			}
@@ -128,7 +131,6 @@ int main(void){
 		
 		levelTimer++;
 	}
-	char *str = "Lose  ";
-	LCD_DisplayString(str);
-	while(1) {};
+	
+	LCD_DisplayScore(points);
 }
