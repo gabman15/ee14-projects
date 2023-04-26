@@ -118,7 +118,8 @@ int main(void){
 				jumpTimer = dinoJumpTime;
 			}
 		}
-		drawDinosaur(jumping);
+		if(obstaclePos != 1)
+			drawDinosaur(jumping);
 		if (jumpLagTimer != 0)
 			jumpLagTimer--;
 		if (jumpTimer != 0) {
